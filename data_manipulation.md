@@ -730,7 +730,7 @@ litters_df =
   select(-pups_born_alive) |> 
   filter(group == "Con7") |> 
   mutate(
-    st_gain = gd18_weight - gd0_weight
+    wt_gain = gd18_weight - gd0_weight
   )
 ```
 
@@ -742,3 +742,51 @@ litters_df =
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+litters_df = 
+  read_csv("data/FAS_litters.csv", na = c( "NA", "", ".")) |> 
+  janitor::clean_names() |> 
+  mutate(wt_gain = gd18_weight - gd0_weight) |> 
+  lm(wt_gain ~ pups_born_alive, data = _)
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+## if the data command is in the last, remember to use data = _
+```
+
+## Data Export
+
+``` r
+litters_df = 
+  read_csv("data/FAS_litters.csv", na = c( "NA", "", ".")) |> 
+  janitor::clean_names() |> 
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group)
+  ) |> 
+  select(-pups_born_alive) |> 
+  filter(group == "Con7")
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+write_csv(litters_df, "data/cleaned_das_litters.csv")
+```
