@@ -8,3 +8,124 @@ library(tidyverse)
 ```
 
 This document will show how to *manipulate* data.
+
+Import the two datasets that we are going to manipulate.
+
+```{r}
+litters_df = 
+  read_csv("data/FAS_litters.csv",  na = c("NA", "", "."))
+```
+
+```{r}
+litters_df = janitor::clean_names(litters_df)
+```
+
+```{r}
+pups_df = 
+  read_csv("data/FAS_pups.csv", na = c("NA", "", "."))
+
+pups_df = janitor::clean_names(pups_df)
+
+```
+
+
+## `select`
+
+Use `select` to select variables -- `select` is about columns, works on variables
+
+```{r}
+select(litters_df, group, litter_number, gd0_weight)
+```
+
+```{r}
+select(litters_df, group:gd18_weight)
+## from group to gd18_weight all variables between them
+```
+
+```{r}
+select(litters_df, -pups_survive)
+## get rid of the variable in the dataset
+```
+
+```{r}
+select(litters_df, -(group:gd18_weight) )
+```
+
+```{r}
+select(litters_df, starts_with("gd"))
+## variable开头首字母 
+select(litters_df, contains("pups"))
+```
+
+```{r}
+select(litters_df, GROUP = group)
+## select and also change variable name
+
+rename(litters_df, GROUP = group)
+## Keep everything but rename the variable
+```
+
+```{r}
+select(litters_df, litter_number, gd0_weight)
+## Change the variable order
+select(litters_df, litter_number, gd0_weight, everything())
+## change the order and keep every variables
+relocate(litters_df, litter_number, gd0_weight)
+## same results as previous one
+```
+
+###### Learning Assessment
+```{r}
+select(pups_df, litter_number, sex, pd_ears)
+```
+
+
+## `filter` -- is about rows, works on observations 
+
+```{r}
+filter(litters_df, gd_of_birth == 20)
+filter(litters_df, gd_of_birth == 19)
+
+filter(litters_df, pups_born_alive > 8)
+filter(litters_df, pups_born_alive >= 8)
+
+filter(litters_df, pups_born_alive != 9)
+# != is not equal
+```
+
+```{r}
+filter(litters_df, group == "Con7")
+filter(litters_df, group %in% c("Low7", "Low8"))
+## %in% is it in the collection of...
+```
+
+```{r}
+filter(litters_df, group %in% c("Low7", "Low8"), pups_born_alive == 8)
+```
+
+```{r}
+## Drop missing data
+drop_na(litters_df)
+drop_na(litters_df, gd0_weight)
+```
+
+###### Learning Assessment
+```{r}
+filter(pups_df, sex == 1)
+filter(pups_df, sex == 2, pd_walk <11 )
+```
+
+
+## `mutate`
+
+
+
+##  `arrange`
+
+
+
+## PIPING!!!!!!!!!!!!!!!
+
+
+
+
